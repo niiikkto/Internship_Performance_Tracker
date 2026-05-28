@@ -1,0 +1,46 @@
+# ===== Python / Backend =====
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+
+# Локальная база и загрузки
+marlo-backend/marlo.db
+marlo-backend/uploads/*
+!marlo-backend/uploads/.gitkeep
+
+# Секреты — НИКОГДА не коммитить
+.env
+.env.local
+.env.*.local
+
+# Артефакты smoke-теста и uvicorn-логов
+_uvi.out
+_uvi.err
+_next.out
+_next.err
+_smoketest.ps1
+
+# ===== Node / Frontend =====
+node_modules/
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+next-env.d.ts
+
+# ===== IDE / OS =====
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+__MACOSX/
+
+# ===== Прочее =====
+marlo-project.zip
+auth-service/
