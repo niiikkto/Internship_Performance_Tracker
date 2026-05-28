@@ -1,0 +1,54 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    container_name: marlo_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: marlo
+      POSTGRES_PASSWORD: marlopass
+      POSTGRES_DB: marlo_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U marlo -d marlo_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./marlo-backend
+      dockerfile: Dockerfile
+    container_name: marlo_backend
+    restart: unless-stopped
+    env_file:
+      - ./marlo-backend/.env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://marlo:marlopass@db:5432/marlo_db
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./marlo-backend/uploads:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./marlo-student-portal
+      dockerfile: Dockerfile
+    container_name: marlo_frontend
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
