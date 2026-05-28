@@ -6,5 +6,6 @@ passlib[bcrypt]
 bcrypt<4.1
 python-dotenv
 aiosqlite
+asyncpg
 email-validator
 python-multipart

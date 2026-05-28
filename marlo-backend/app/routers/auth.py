@@ -14,13 +14,14 @@ from app.services.auth_service import (
     register_user,
     login_user,
     get_all_users,
+    get_students,
     deactivate_user,
     activate_user,
     change_user_role,
     change_password,
     refresh_tokens,
 )
-from app.core.dependencies import get_current_user, require_admin
+from app.core.dependencies import get_current_user, require_admin, require_manager
 from app.models.user import User
 from typing import List
 
@@ -49,6 +50,15 @@ async def change_my_password(
     current_user: User = Depends(get_current_user),
 ):
     return await change_password(db, current_user, data.old_password, data.new_password)
+
+@router.get("/students", response_model=List[UserResponse])
+async def list_students(
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_manager),
+):
+    """Список студентов для назначения задач и оценок (менеджер/админ)."""
+    return await get_students(db)
+
 
 @router.get("/users", response_model=List[UserResponse])
 async def get_users(

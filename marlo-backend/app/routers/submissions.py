@@ -13,7 +13,7 @@ from app.models.submission import ReportSubmission
 from app.schemas.submission import SubmissionResponse
 from app.services.task_service import TimelineService
 
-router = APIRouter(prefix="/api/v1", tags=["submissions"])
+router = APIRouter(tags=["submissions"])
 
 UPLOAD_DIR = Path(__file__).resolve().parents[2] / "uploads"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)

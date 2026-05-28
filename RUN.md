@@ -84,7 +84,7 @@ python -m venv venv
 .\venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 # чистим старую БД, если она была собрана со сломанной моделью User
-Remove-Item .\marlo.db -ErrorAction SilentlyContinue
+Remove-Item .\marlo_db.db -ErrorAction SilentlyContinue
 uvicorn app.main:app --reload --port 8000
 ```
 Swagger: http://localhost:8000/docs

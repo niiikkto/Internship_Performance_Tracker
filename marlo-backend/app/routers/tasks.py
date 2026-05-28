@@ -19,7 +19,7 @@ from app.services.task_service import (
     TaskService, TaskAssignmentService, KPIService, TimelineService,
 )
 
-router = APIRouter(prefix="/api/v1", tags=["tasks"])
+router = APIRouter(tags=["tasks"])
 
 
 # ==================== STATIC SUB-PATHS — ОБЯЗАТЕЛЬНО раньше {task_id} ====================

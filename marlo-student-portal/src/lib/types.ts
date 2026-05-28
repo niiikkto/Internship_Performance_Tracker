@@ -25,7 +25,33 @@ export interface Task {
   due_date: string;
   status: TaskStatus;
   created_at: string;
-  updated_at: string;
+  updated_at?: string | null;
+}
+
+export interface TaskDetail extends Task {
+  assignments: TaskAssignmentBrief[];
+}
+
+export interface TaskAssignmentBrief {
+  id: number;
+  task_id: number;
+  student_id: number;
+  status: TaskStatus;
+  completed_at: string | null;
+  feedback: string | null;
+  created_at: string;
+  updated_at?: string | null;
+}
+
+export interface StudentRanking {
+  student_id: number;
+  full_name: string;
+  email: string;
+  performance_score: number;
+  rank: number;
+  tasks_completed: number;
+  tasks_on_time: number;
+  tasks_total: number;
 }
 
 export interface TaskAssignment {
@@ -95,4 +121,34 @@ export interface Paginated<T> {
   total: number;
   skip: number;
   limit: number;
+}
+
+export interface DashboardStats {
+  avg_performance_score: number;
+  avg_attendance_rate: number;
+  avg_feedback_score: number | null;
+  total_students: number;
+  active_tasks: number;
+  overdue_tasks: number;
+}
+
+export interface OverdueTaskItem {
+  assignment_id: number;
+  task_id: number;
+  task_title: string;
+  student_id: number;
+  student_name: string;
+  due_date: string;
+  status: TaskStatus;
+  days_overdue: number;
+}
+
+export interface TopPerformer {
+  student_id: number;
+  full_name: string;
+  email: string;
+  performance_score: number;
+  tasks_completed: number;
+  tasks_total: number;
+  attendance_rate: number;
 }

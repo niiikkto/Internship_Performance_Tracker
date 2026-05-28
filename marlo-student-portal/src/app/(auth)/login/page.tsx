@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { api, ApiError } from "@/lib/api";
-import { saveAuth } from "@/lib/auth";
+import { clearAuth, saveAuth, saveTokens } from "@/lib/auth";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
@@ -21,12 +21,11 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const tokens = await api.login(email, password);
-      const user = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000"}/auth/me`,
-        { headers: { Authorization: `Bearer ${tokens.access_token}` } },
-      ).then((r) => r.json());
+      saveTokens(tokens);
+      const user = await api.me();
 
       if (user.role !== "student") {
+        clearAuth();
         setError("Этот портал только для студентов");
         return;
       }
@@ -63,6 +62,10 @@ export default function LoginPage() {
             Нет аккаунта?{" "}
             <Link href="/register" className="font-medium text-brand-600 hover:underline">
               Зарегистрироваться
+            </Link>
+            {" · "}
+            <Link href="/admin/login" className="font-medium text-slate-600 hover:underline">
+              Вход для администратора
             </Link>
           </p>
 

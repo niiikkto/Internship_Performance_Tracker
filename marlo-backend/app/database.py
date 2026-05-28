@@ -5,9 +5,17 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./marlo.db")
+# БД marlo_db: SQLite `marlo_db.db` по умолчанию; Postgres — через DATABASE_URL в .env
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "sqlite+aiosqlite:///./marlo_db.db",
+)
 
-engine = create_async_engine(DATABASE_URL, echo=True)
+_engine_kwargs: dict = {"echo": True}
+if DATABASE_URL.startswith("sqlite"):
+    _engine_kwargs["connect_args"] = {"check_same_thread": False}
+
+engine = create_async_engine(DATABASE_URL, **_engine_kwargs)
 AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 Base = declarative_base()
 

@@ -66,6 +66,15 @@ async def get_all_users(db: AsyncSession):
     result = await db.execute(select(User))
     return result.scalars().all()
 
+
+async def get_students(db: AsyncSession, active_only: bool = True):
+    query = select(User).where(User.role == RoleEnum.student)
+    if active_only:
+        query = query.where(User.is_active.is_(True))
+    query = query.order_by(User.full_name)
+    result = await db.execute(query)
+    return result.scalars().all()
+
 async def deactivate_user(db: AsyncSession, user_id: int):
     result = await db.execute(select(User).where(User.id == user_id))
     user = result.scalar_one_or_none()

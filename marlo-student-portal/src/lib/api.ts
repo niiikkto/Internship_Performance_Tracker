@@ -69,7 +69,14 @@ async function refreshAccessToken(): Promise<string | null> {
   return tokens.access_token;
 }
 
-async function request<T>(
+function loginRedirectPath(): string {
+  if (typeof window !== "undefined" && window.location.pathname.startsWith("/admin")) {
+    return "/admin/login";
+  }
+  return "/login";
+}
+
+export async function apiRequest<T>(
   path: string,
   options: RequestInit = {},
   retry = true,
@@ -101,7 +108,7 @@ async function request<T>(
     }
     clearAuth();
     if (typeof window !== "undefined") {
-      window.location.href = "/login";
+      window.location.href = loginRedirectPath();
     }
     throw new ApiError("Сессия истекла", 401);
   }
@@ -125,9 +132,11 @@ async function request<T>(
   return res.text() as Promise<T>;
 }
 
+const request = apiRequest;
+
 export const api = {
   login: (email: string, password: string) =>
-    request<TokenPair>("/auth/login", {
+    apiRequest<TokenPair>("/auth/login", {
       method: "POST",
       body: JSON.stringify({ email, password }),
     }),

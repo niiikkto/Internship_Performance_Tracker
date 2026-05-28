@@ -20,7 +20,7 @@ from app.services.analytics_service import (
     FeedbackService, AttendanceService, AnalyticsService,
 )
 
-router = APIRouter(prefix="/api/v1", tags=["analytics"])
+router = APIRouter(tags=["analytics"])
 
 
 # ==================== ATTENDANCE ====================
@@ -254,7 +254,7 @@ async def get_top_performers(
 
 @router.get("/reports/my-report")
 async def get_my_report(
-    format: str = Query("json", regex="^(json|csv)$"),
+    format: str = Query("json", pattern="^(json|csv)$"),
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
@@ -266,7 +266,7 @@ async def get_my_report(
 @router.get("/reports/student/{student_id}")
 async def generate_student_report(
     student_id: int,
-    format: str = Query("json", regex="^(json|csv)$"),
+    format: str = Query("json", pattern="^(json|csv)$"),
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
@@ -317,7 +317,7 @@ async def _build_student_report(db: AsyncSession, student_id: int, format: str):
 
 @router.get("/stats/period", response_model=dict)
 async def get_period_stats(
-    period: str = Query("week", regex="^(week|month)$"),
+    period: str = Query("week", pattern="^(week|month)$"),
     start_date: Optional[datetime] = None,
     end_date: Optional[datetime] = None,
     current_user: User = Depends(require_manager),

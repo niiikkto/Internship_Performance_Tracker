@@ -27,9 +27,13 @@ export function getStoredUser(): User | null {
   }
 }
 
-export function saveAuth(tokens: TokenPair, user: User) {
+export function saveTokens(tokens: TokenPair) {
   localStorage.setItem(ACCESS_KEY, tokens.access_token);
   localStorage.setItem(REFRESH_KEY, tokens.refresh_token);
+}
+
+export function saveAuth(tokens: TokenPair, user: User) {
+  saveTokens(tokens);
   localStorage.setItem(USER_KEY, JSON.stringify(user));
 }
 
@@ -43,4 +47,18 @@ export function isStudentLoggedIn(): boolean {
   const user = getStoredUser();
   const token = getAccessToken();
   return Boolean(token && user?.role === "student");
+}
+
+export function isStaffLoggedIn(): boolean {
+  const user = getStoredUser();
+  const token = getAccessToken();
+  return Boolean(
+    token && (user?.role === "admin" || user?.role === "manager"),
+  );
+}
+
+export function isAdminLoggedIn(): boolean {
+  const user = getStoredUser();
+  const token = getAccessToken();
+  return Boolean(token && user?.role === "admin");
 }
